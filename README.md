@@ -2,7 +2,7 @@
 
 Small example of how to work with JSON with persistence in PostgreSQL, has Schema validation and default values.
 
-Uses Sequelize, AJV and deepmerge, check the folder ```example``` to see how works.
+Uses [Sequelize](https://github.com/sequelize/sequelize), [Ajv](https://github.com/epoberezkin/ajv) and deepmerge, check the folder ```example``` to see how works.
 
 ## Disclaimer
 

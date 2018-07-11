@@ -21,7 +21,7 @@ const Schema = {
             schema: obj => {
                 // use defaults was not enough for nested objects
                 const ajv = new Ajv();
-                obj = merge.all([Schema.toPlain(schemaProp), obj]);
+                obj = merge(Schema.toPlain(schemaProp), obj);
                 var valid = ajv.validate(schemaProp, obj);
                 if (!valid) {
                     throw new Error(JSON.stringify(ajv.errors));
