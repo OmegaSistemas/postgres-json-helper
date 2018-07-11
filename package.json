@@ -1,0 +1,26 @@
+{
+  "name": "postgres-json-helper",
+  "version": "1.0.0",
+  "description": "Helper to your models using Postgres and JSON",
+  "main": "Postgres.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kivervinicius/postgres-json-helper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kivervinicius/postgres-json-helper/issues"
+  },
+  "homepage": "https://github.com/kivervinicius/postgres-json-helper#readme",
+  "dependencies": {
+    "ajv": "^6.5.2",
+    "deepmerge": "^2.1.1",
+    "pg": "^7.4.3",
+    "sequelize": "^4.38.0"
+  }
+}
