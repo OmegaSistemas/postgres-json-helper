@@ -27,7 +27,7 @@ const Schema = {
     validator: schemaProp => {
         return {
             schema: obj => {
-                // use defaults não foi o suficiente para objetos aninhados
+                // use defaults was not enough for nested objects
                 const ajv = new Ajv();
                 obj = Schema.applyDefaultValues(obj, schemaProp);
                 var valid = ajv.validate(schemaProp, obj);
@@ -72,11 +72,11 @@ const Schema = {
                         }
                     }
                 } else {
-                    console.error(obj, "não encontrado");
+                    console.error(obj, "not found");
                 }
             }
         } else {
-            throw new Error("Not Scheme AJV valid");
+            throw new Error("Not is scheme AJV valid");
         }
         return types;
     },
