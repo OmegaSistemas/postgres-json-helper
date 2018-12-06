@@ -18,9 +18,9 @@
   },
   "homepage": "https://github.com/kivervinicius/postgres-json-helper#readme",
   "dependencies": {
-    "ajv": "^6.5.2",
-    "deepmerge": "^2.1.1",
-    "pg": "^7.4.3",
-    "sequelize": "^4.38.0"
+    "ajv": "^6.6.1",
+    "deepmerge": "^3.0.0",
+    "pg": "^7.7.1",
+    "sequelize": "^4.41.2"
   }
 }

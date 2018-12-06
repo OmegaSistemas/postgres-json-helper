@@ -3,13 +3,21 @@ const configBD = require("../config.json");
 const Ajv = require("ajv");
 const merge = require("deepmerge");
 
-function connect (db) {
-    const sequelize = new Sequelize(db, configBD.postgres.user, configBD.postgres.password, {
-        host: configBD.postgres.server,
-        dialect: "postgres",
-        operatorsAliases: false,
-        pool: configBD.postgres.pool,
-    });
+function connect(db) {
+    const sequelize = new Sequelize(
+        db,
+        configBD.postgres.user,
+        configBD.postgres.password,
+        {
+            host: configBD.postgres.server,
+            dialect: "postgres",
+            port: configBD.postgres.port,
+            operatorsAliases: false,
+            pool: configBD.postgres.pool,
+            logging: configBD.postgres.logging,
+            timezone: "America/Sao_Paulo"
+        }
+    );
     return sequelize;
 }
 
@@ -19,14 +27,15 @@ const Schema = {
     validator: schemaProp => {
         return {
             schema: obj => {
-                // use defaults was not enough for nested objects
+                // use defaults não foi o suficiente para objetos aninhados
                 const ajv = new Ajv();
-                obj = merge(Schema.toPlain(schemaProp), obj);
+                obj = Schema.applyDefaultValues(obj, schemaProp);
                 var valid = ajv.validate(schemaProp, obj);
                 if (!valid) {
+                    console.log(obj);
                     throw new Error(JSON.stringify(ajv.errors));
                 }
-            },
+            }
         };
     },
 
@@ -34,7 +43,16 @@ const Schema = {
         return {
             type: "object",
             additionalProperties: false,
-            properties: object,
+            properties: object
+        };
+    },
+
+    array: items => {
+        return {
+            type: "array",
+            additionalItems: false,
+            items: items,
+            default: [],
         };
     },
 
@@ -54,29 +72,56 @@ const Schema = {
                         }
                     }
                 } else {
-                    console.error(obj, "not found");
+                    console.error(obj, "não encontrado");
                 }
             }
         } else {
-            throw new Error("Not is scheme AJV valid");
+            throw new Error("Not Scheme AJV valid");
         }
         return types;
     },
 
+    applyDefaultValues: (obj, schemaProp) => {
+        return merge(Schema.toPlain(schemaProp), obj);
+    },
+
     DATE: {
         instanceof: "Date",
-        default: null,
+        default: null
     },
 
     STRING: {
-        type: "string",
-        default: "",
+        type: ["string", "null"],
+        default: ""
+    },
+
+    STRING: (def = "") => {
+        return {
+            type: ["string", "null"],
+            default: def,
+        };
     },
 
     NUMBER: {
         type: ["number", "null"],
-        default: null,
+        default: null
     },
+
+    ARRAY: {
+        type: ["array", "null"],
+        default: [],
+    },
+
+    OBJECT: {
+        type: ["object", "null"],
+        additionalProperties: true,
+        default: {},
+    },
+
+    BOOLEAN: {
+        type: "boolean",
+        default: false,
+    }
 };
 
 module.exports = { connect, Sequelize, Schema };
