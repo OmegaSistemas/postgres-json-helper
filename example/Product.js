@@ -8,7 +8,7 @@ const schemaContent = Schema.obj({
     balance: Schema.NUMBER,
     data: Schema.obj({
         manufacturer: Schema.STRING,
-        name: Schema.STRING,
+        name: Schema.STRING("NAME DEFAULT"),
         prerelease: Schema.STRING,
         version: Schema.STRING,
         especify: Schema.obj({
