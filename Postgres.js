@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const configBD = require("../config.json");
 const Ajv = require("ajv");
-const merge = require("deepmerge");
+const merge = require("lodash.merge");
 
 function connect(db) {
     const sequelize = new Sequelize(
@@ -40,6 +40,11 @@ const Schema = {
     },
 
     obj: object => {
+        Object.keys(object).forEach(key => {
+            if (typeof object[key] === "function") {
+                object[key] = object[key].call(this);
+            }
+        });
         return {
             type: "object",
             additionalProperties: false,
@@ -48,11 +53,14 @@ const Schema = {
     },
 
     array: items => {
+        if (typeof items === "function") {
+            items = items.call(this);
+        }
         return {
-            type: "array",
+            type: ["array", "null"],
             additionalItems: false,
             items: items,
-            default: [],
+            default: []
         };
     },
 
@@ -62,7 +70,10 @@ const Schema = {
             content = content.properties;
             for (const obj in content) {
                 if (content.hasOwnProperty(obj)) {
-                    const row = content[obj];
+                    let row = content[obj];
+                    if (typeof row == "function") {
+                        row = row.call(this);
+                    }
                     if (row.type === "object") {
                         types[obj] = Schema.toPlain(row);
                     } else {
@@ -90,15 +101,10 @@ const Schema = {
         default: null
     },
 
-    STRING: {
-        type: ["string", "null"],
-        default: ""
-    },
-
     STRING: (def = "") => {
         return {
             type: ["string", "null"],
-            default: def,
+            default: def
         };
     },
 
@@ -109,18 +115,18 @@ const Schema = {
 
     ARRAY: {
         type: ["array", "null"],
-        default: [],
+        default: []
     },
 
     OBJECT: {
         type: ["object", "null"],
         additionalProperties: true,
-        default: {},
+        default: {}
     },
 
     BOOLEAN: {
         type: "boolean",
-        default: false,
+        default: false
     }
 };
 
