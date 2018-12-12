@@ -89,7 +89,7 @@ const Schema = {
         } else {
             throw new Error("Not is scheme AJV valid");
         }
-        return types;
+        return JSON.parse(JSON.stringify(types));
     },
 
     applyDefaultValues: (obj, schemaProp) => {
